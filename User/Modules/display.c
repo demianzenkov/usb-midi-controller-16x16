@@ -56,9 +56,9 @@ int32_t lcd_io_init(void) {
 
 	/* reset LCD */
     HAL_GPIO_WritePin(ds_active->reset_port, ds_active->reset_pin, GPIO_PIN_RESET);
-	HAL_Delay(100);
+	HAL_Delay(10);
     HAL_GPIO_WritePin(ds_active->reset_port, ds_active->reset_pin, GPIO_PIN_SET);
-	HAL_Delay(100);
+	HAL_Delay(10);
 
     HAL_GPIO_WritePin(ds_active->cs_port, ds_active->cs_pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(ds_active->rs_port, ds_active->rs_pin, GPIO_PIN_SET);

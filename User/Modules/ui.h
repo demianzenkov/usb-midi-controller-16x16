@@ -9,5 +9,6 @@
 #include "lvgl.h"
 
 void ui_init();
+void ui_show_string(const char *str);
 
 #endif /* UI_H_ */
