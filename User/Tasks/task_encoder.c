@@ -1,25 +1,28 @@
 /*
  * task_encoder.c
  *
- *  Created on: Apr 13, 2024
- *      Author: demian
  */
 
 #include "task_encoder.h"
+#include "main.h"
+#include "cmsis_os.h"
 
-static void TaskEncoder_task(void const * arg);
+static void TaskEncoder_task(void const *arg);
 
-void TaskEncoder_createTask()
-{
+osThreadId encoderTaskHandle;
+
+
+void TaskEncoder_createTask() {
+	osThreadDef(encoderTask, TaskEncoder_task, osPriorityNormal, 0, 128);
+	encoderTaskHandle = osThreadCreate(osThread(encoderTask), NULL);
 
 }
 
-void TaskEncoder_task(void const * arg)
-{
-	while(1){
-        // Encoders to read without interrupts: ENC24, ENC41
+void TaskEncoder_task(void const *arg) {
+	while (1) {
+		// Encoders to read without interrupts: ENC24, ENC41
+		osDelay(1);
+		// Encoders to read with interrupts: ENC11, ENC12, ENC13, ENC14, ENC21, ENC22, ENC23, ENC31, ENC32, ENC33, ENC34, ENC42, ENC43, ENC44
 
-        // Encoders to read with interrupts: ENC11, ENC12, ENC13, ENC14, ENC21, ENC22, ENC23, ENC31, ENC32, ENC33, ENC34, ENC42, ENC43, ENC44
-        
 	}
 }
