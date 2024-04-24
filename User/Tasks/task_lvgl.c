@@ -78,6 +78,13 @@ void TaskLVGL_createTask() {
 #endif
 }
 
+void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value) {
+    show_string_queue_t show_string;
+    show_string.display_id = disp;
+    sprintf(show_string.str, "%i", value);
+    xQueueSend(show_string_queue, &show_string, portMAX_DELAY);
+}
+
 void TaskLVGL_ui_task(void const *arg) {
     xSemaphoreTake(lvgl_ready_sem, portMAX_DELAY);
 

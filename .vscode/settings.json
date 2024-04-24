@@ -5,6 +5,8 @@
         "ios": "c",
         "istream": "c",
         "locale": "c",
-        "ostream": "c"
+        "ostream": "c",
+        "stdio.h": "c",
+        "ui.h": "c"
     }
 }

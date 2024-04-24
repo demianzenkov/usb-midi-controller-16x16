@@ -17,7 +17,7 @@ void ui_init() {
 	lv_obj_set_align(obj, LV_ALIGN_CENTER);
 	lv_obj_set_height(obj, LV_SIZE_CONTENT);
 	lv_obj_set_width(obj, LV_SIZE_CONTENT);
-	lv_obj_set_style_text_font(obj, &lv_font_montserrat_14, 0);
+	lv_obj_set_style_text_font(obj, &lv_font_montserrat_24, 0);
 	lv_obj_set_style_text_color(obj, lv_color_black(), 0);
 
 	char string_to_print[30];
@@ -43,7 +43,7 @@ void ui_show_string(const char * str) {
     lv_obj_set_align(obj, LV_ALIGN_CENTER);
     lv_obj_set_height(obj, LV_SIZE_CONTENT);
     lv_obj_set_width(obj, LV_SIZE_CONTENT);
-    lv_obj_set_style_text_font(obj, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(obj, &lv_font_montserrat_24, 0);
     lv_obj_set_style_text_color(obj, lv_color_black(), 0);
 
     lv_label_set_text(obj, str);

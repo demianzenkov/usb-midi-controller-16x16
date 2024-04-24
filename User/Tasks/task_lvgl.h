@@ -15,6 +15,7 @@
 #define BUS_SPI1_POLL_TIMEOUT 0x1000U
 
 void TaskLVGL_createTask();
+void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value);
 
 typedef struct{
     uint8_t display_id;
