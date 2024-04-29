@@ -7,6 +7,24 @@
         "locale": "c",
         "ostream": "c",
         "stdio.h": "c",
-        "ui.h": "c"
+        "ui.h": "c",
+        "display.h": "c",
+        "__bit_reference": "c",
+        "__node_handle": "c",
+        "atomic": "c",
+        "bitset": "c",
+        "chrono": "c",
+        "cstddef": "c",
+        "deque": "c",
+        "__memory": "c",
+        "filesystem": "c",
+        "limits": "c",
+        "optional": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "vector": "c",
+        "task_midi.h": "c"
     }
 }

@@ -14,7 +14,7 @@
 #include "display.h"
 #include "ui.h"
 
-#define TEST_UI 1
+#define TEST_UI 0
 
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
@@ -26,8 +26,10 @@ osThreadId uiTaskHandle;
 SemaphoreHandle_t lvgl_ready_sem;
 SemaphoreHandle_t ui_busy_mutex;
 QueueHandle_t show_string_queue;
+QueueHandle_t show_value_queue;
 
 lv_display_t *lcd_disp;
+SemaphoreHandle_t ui_ready_sem;
 
 static void TaskLVGL_task(void const *arg);
 static void TaskLVGL_ui_task(void const *arg);
@@ -35,8 +37,8 @@ static void TaskLVGL_ui_task(void const *arg);
 #if TEST_UI
 osThreadId testUITaskHandle;
 static void TaskLVGL_test_ui_task(void const *arg);
-SemaphoreHandle_t ui_ready_sem;
 #endif
+
 
 static const uint8_t init_cmd_list[] = {
     0xB1,       3,  0x05, 0x3C, 0x3C,
@@ -61,10 +63,9 @@ void TaskLVGL_createTask() {
     xSemaphoreGive(ui_busy_mutex);
 
     show_string_queue = xQueueCreate(10, sizeof(show_string_queue_t));
+    show_value_queue = xQueueCreate(10, sizeof(show_value_queue_t));
 
-#if TEST_UI
     ui_ready_sem = xSemaphoreCreateBinary();
-#endif
 
 	osThreadDef(lvglTask, TaskLVGL_task, osPriorityNormal, 0, 1024);
 	lvglTaskHandle = osThreadCreate(osThread(lvglTask), NULL);
@@ -79,10 +80,15 @@ void TaskLVGL_createTask() {
 }
 
 void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value) {
-    show_string_queue_t show_string;
-    show_string.display_id = disp;
-    sprintf(show_string.str, "%i", value);
-    xQueueSend(show_string_queue, &show_string, portMAX_DELAY);
+    // show_string_queue_t show_string;
+    // show_string.display_id = disp;
+    // sprintf(show_string.str, "%i", value);
+    // xQueueSend(show_string_queue, &show_string, portMAX_DELAY);
+    
+    show_value_queue_t show_value;
+    show_value.display_id = disp;
+    show_value.value = value;
+    xQueueSend(show_value_queue, &show_value, portMAX_DELAY);
 }
 
 void TaskLVGL_ui_task(void const *arg) {
@@ -101,13 +107,21 @@ void TaskLVGL_ui_task(void const *arg) {
     xSemaphoreGive(ui_ready_sem);
     
     show_string_queue_t show_string;
+    show_value_queue_t show_value;
     for(;;) {
-        if(xQueueReceive(show_string_queue, &show_string, 50) == pdTRUE) {
+        if(xQueueReceive(show_string_queue, &show_string, 0) == pdTRUE) {
             xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
             set_active_display(show_string.display_id);
             ui_show_string(show_string.str);
             xSemaphoreGive(ui_busy_mutex);
-            osDelay(50);
+            osDelay(30);
+        }
+        if(xQueueReceive(show_value_queue, &show_value, 0) == pdTRUE) {
+            xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
+            set_active_display(show_value.display_id);
+            ui_set_bar_level(show_value.value);
+            xSemaphoreGive(ui_busy_mutex);
+            osDelay(30);
         }
     }
 }

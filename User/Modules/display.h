@@ -10,8 +10,8 @@
 #include "cmsis_os.h"
 #include "lvgl.h"
 
-#define LCD_H_RES       132
-#define LCD_V_RES       162
+//#define LCD_H_RES       132
+//#define LCD_V_RES       162
 #define BUS_SPI1_POLL_TIMEOUT 0x1000U
 
 

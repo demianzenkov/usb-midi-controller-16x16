@@ -8,6 +8,9 @@
 
 #include "main.h"
 
+#define ENCODER_MIN_VALUE   0
+#define ENCODER_MAX_VALUE   127
+
 typedef struct {
     uint8_t encoder_id;
     uint8_t state_a;
