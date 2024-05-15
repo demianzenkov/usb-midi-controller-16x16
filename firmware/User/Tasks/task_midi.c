@@ -8,12 +8,13 @@
 #include "cmsis_os.h"
 #include "usb_device.h"
 #include "usbd_midi.h"
+#include "usbd_midi_if.h"
 
-extern USBD_HandleTypeDef hUsbDeviceFS;
 
 osThreadId MIDITaskHandle;
 QueueHandle_t midi_event_queue;
 uint8_t midi_msg_buffer[4];
+extern USBD_HandleTypeDef hUsbDevice;
 
 uint8_t usb_midi_report[4] = {
     0x19, // cable number, code index number
@@ -48,10 +49,10 @@ void TaskMIDI_task(void const *arg) {
             usb_midi_report[1] = midi_ev.message_type | (midi_ev.channel & 0x0F);
             usb_midi_report[2] = midi_ev.note;
             usb_midi_report[3] = midi_ev.value;
-            while (USBD_MIDI_GetState(&hUsbDeviceFS) != MIDI_IDLE) {
+            while (MIDI_GetState() != MIDI_IDLE) {
                 continue;
             };
-            USBD_MIDI_SendReport(&hUsbDeviceFS, usb_midi_report, 4);
+            MIDI_SendReport(usb_midi_report, 4);
         }
 	}
 }
