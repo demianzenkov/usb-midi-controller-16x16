@@ -30,8 +30,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_acm.h"
 
-#define APP_RX_DATA_SIZE 256
-#define APP_TX_DATA_SIZE 256
+#define APP_RX_DATA_SIZE 128
+#define APP_TX_DATA_SIZE 128
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @brief For Usb device.

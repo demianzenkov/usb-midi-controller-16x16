@@ -27,6 +27,7 @@ SemaphoreHandle_t lvgl_ready_sem;
 SemaphoreHandle_t ui_busy_mutex;
 QueueHandle_t show_string_queue;
 QueueHandle_t show_value_queue;
+QueueHandle_t show_image_queue;
 
 lv_display_t *lcd_disp;
 SemaphoreHandle_t ui_ready_sem;
@@ -62,8 +63,9 @@ void TaskLVGL_createTask() {
     ui_busy_mutex = xSemaphoreCreateMutex();
     xSemaphoreGive(ui_busy_mutex);
 
-    show_string_queue = xQueueCreate(10, sizeof(show_string_queue_t));
+    show_string_queue = xQueueCreate(4, sizeof(show_string_queue_t));
     show_value_queue = xQueueCreate(10, sizeof(show_value_queue_t));
+    show_image_queue = xQueueCreate(10, sizeof(show_img_queue_t));
 
     ui_ready_sem = xSemaphoreCreateBinary();
 
@@ -99,7 +101,8 @@ void TaskLVGL_ui_task(void const *arg) {
     for(int i = 0; i < 16; i++) {
         xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
         set_active_display(i);
-        ui_init();
+//        ui_init();
+        ui_show_logo();
         xSemaphoreGive(ui_busy_mutex);
         osDelay(50);
     }
@@ -108,6 +111,7 @@ void TaskLVGL_ui_task(void const *arg) {
     
     show_string_queue_t show_string;
     show_value_queue_t show_value;
+    show_img_queue_t show_img;
     for(;;) {
         if(xQueueReceive(show_string_queue, &show_string, 0) == pdTRUE) {
             xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
@@ -120,6 +124,13 @@ void TaskLVGL_ui_task(void const *arg) {
             xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
             set_active_display(show_value.display_id);
             ui_set_bar_level(show_value.value);
+            xSemaphoreGive(ui_busy_mutex);
+            osDelay(30);
+        }
+        if(xQueueReceive(show_image_queue, &show_img, 0) == pdTRUE) {
+            xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
+            set_active_display(show_img.display_id);
+            ui_show_image(show_img.img_buf, show_img.img_size);
             xSemaphoreGive(ui_busy_mutex);
             osDelay(30);
         }

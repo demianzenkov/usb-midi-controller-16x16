@@ -114,7 +114,7 @@ void MX_FREERTOS_Init(void) {
   TaskButtons_createTask();
   TaskEncoder_createTask();
   TaskLVGL_createTask();
-  TaskACM_createTask();
+//  TaskACM_createTask();
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 

@@ -27,4 +27,10 @@ typedef struct{
     uint8_t value;
 } show_value_queue_t;
 
+typedef struct{
+    uint8_t display_id;
+    uint8_t * img_buf;
+    size_t img_size;
+} show_img_queue_t;
+
 #endif /* TASK_LVGL_H_ */
