@@ -110,10 +110,11 @@ void MX_FREERTOS_Init(void) {
 //  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  TaskMIDI_createTask();
-  TaskButtons_createTask();
-  TaskEncoder_createTask();
-  TaskLVGL_createTask();
+	TaskLVGL_createTask();
+	TaskMIDI_createTask();
+	TaskButtons_createTask();
+	TaskEncoder_createTask();
+
 //  TaskACM_createTask();
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
