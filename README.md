@@ -1,6 +1,6 @@
-### 16-Display x 16-Encoder MIDI Controller
+### STM32 16-Display x 16-Encoder MIDI Controller
 
-Repo contais firmware & hardware sources for USB-MIDI device with 16 rotary encoder & 16 TFT LCD displays. Device is running on STM32F446 MC
+Repo contais firmware & hardware sources for USB-MIDI device with 16 rotary encoder & 16 TFT LCD displays. Device is running on STM32F446 MCU
 
 ##### PCB
 
