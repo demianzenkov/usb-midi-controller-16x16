@@ -64,7 +64,7 @@ void TaskACM_task(void const *arg) {
 					// copy buffer to command_string_buffer
 
 			// TaskACM_parseInputBuffer(&acm_ev);
-			
+
             // memcpy(pic_buffer+img_size, acm_ev.buffer, acm_ev.len);
             // img_size += acm_ev.len;
         	// packet_cnt++;
@@ -91,6 +91,10 @@ void TaskACM_parseInputBuffer(char * buffer) {
 		if(strncmp(cmd, "/set/name/", 10) == 0) {
 			cmd += 10; // skip "/set/name/"
 			uint8_t disp_id = atoi(cmd);
+			if(disp_id > 15) {
+				CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
+				return;
+			}
 			cmd = strchr(cmd, '/');
 			if(cmd != NULL) {
 				cmd++; // skip '/'
@@ -104,6 +108,10 @@ void TaskACM_parseInputBuffer(char * buffer) {
 		else if(strncmp(cmd, "/set/value/", 11) == 0) {
 			cmd += 11; // skip "/set/value/"
 			uint8_t disp_id = atoi(cmd);
+			if(disp_id > 15) {
+				CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
+				return;
+			}
 			cmd = strchr(cmd, '/');
 			if(cmd != NULL) {
 				cmd++; // skip '/'
