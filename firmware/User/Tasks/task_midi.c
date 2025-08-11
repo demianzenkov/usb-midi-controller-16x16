@@ -45,7 +45,9 @@ void TaskMIDI_task(void const *arg) {
     midi_event_t midi_ev;
 	while (1) {
         if(xQueueReceive(midi_event_queue, &midi_ev, portMAX_DELAY) == pdTRUE) {
-            usb_midi_report[0] = 0x10 | ((midi_ev.message_type >> 4) & 0x0F);
+            // Construct USB MIDI packet with correct Code Index Number (CIN)
+            // Cable Number = 0, CIN = message_type upper 4 bits
+            usb_midi_report[0] = (midi_ev.message_type >> 4) & 0x0F;
             usb_midi_report[1] = midi_ev.message_type | (midi_ev.channel & 0x0F);
             usb_midi_report[2] = midi_ev.note;
             usb_midi_report[3] = midi_ev.value;
