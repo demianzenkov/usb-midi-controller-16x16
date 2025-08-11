@@ -128,6 +128,7 @@ for(int i = 0; i < 16; i++) {
             lv_obj_t * obj = objects.label_name;
 			lv_label_set_text(obj, show_name.str);
             xSemaphoreGive(ui_busy_mutex);
+			osDelay(30);
         }
         if(xQueueReceive(show_value_queue, &show_value, 1) == pdTRUE) {
             xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
