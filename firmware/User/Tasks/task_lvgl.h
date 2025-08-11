@@ -12,15 +12,23 @@
 
 #define LCD_H_RES       132
 #define LCD_V_RES       162
+
+#define LCD_H_PHYSICAL_RES       80
+#define LCD_V_PHYSICAL_RES       160
+
+#define LCD_DRAW_BUFF_HEIGHT  (32)
+
 #define BUS_SPI1_POLL_TIMEOUT 0x1000U
+#define MAX_NAME_LENGTH (16)
 
 void TaskLVGL_createTask();
 void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value);
+void TaskLVGL_showStringOnDisplay(uint8_t disp, const char * str);
 
 typedef struct{
     uint8_t display_id;
-    char str[32];
-} show_string_queue_t;
+    char str[MAX_NAME_LENGTH];
+} show_name_queue_t;
 
 typedef struct{
     uint8_t display_id;

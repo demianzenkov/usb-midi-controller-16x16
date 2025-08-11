@@ -22,6 +22,7 @@ typedef struct {
     uint32_t prev_ts;
 } encoder_ev_t;
 
+extern uint8_t encoder_values[16];
 void TaskEncoder_createTask();
 
 #endif /* TASK_ENCODER_H_ */

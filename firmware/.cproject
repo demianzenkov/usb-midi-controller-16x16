@@ -56,6 +56,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/lvgl"/>
 									<listOptionValue builtIn="false" value="../User/Tasks"/>
 									<listOptionValue builtIn="false" value="../User/Modules"/>
+									<listOptionValue builtIn="false" value="../User/Modules/ui"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/Inc"/>
 									<listOptionValue builtIn="false" value="../Composite"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/COMPOSITE/Inc"/>
