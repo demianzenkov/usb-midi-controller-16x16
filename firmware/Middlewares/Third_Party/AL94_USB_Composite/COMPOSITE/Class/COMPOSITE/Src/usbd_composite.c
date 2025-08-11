@@ -386,7 +386,7 @@ static uint8_t USBD_COMPOSITE_Setup(USBD_HandleTypeDef *pdev,
   }
 #endif
 #if (USBD_USE_MIDI == 1)
-  if (LOBYTE(req->wIndex) == MIDI_ITF_NBR)
+  if (LOBYTE(req->wIndex) == MIDI_ITF_NBR || LOBYTE(req->wIndex) == (MIDI_ITF_NBR - 1))
   {
     USBD_MIDI.Setup(pdev, req);
   }
@@ -1128,7 +1128,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 
   in_ep_track += 1;
   out_ep_track += 1;
-  interface_no_track += 1;
+  interface_no_track += 2;  // Changed from 1 to 2 (Audio Control + MIDI Streaming)
   USBD_Track_String_Index += 1;
 #endif
 

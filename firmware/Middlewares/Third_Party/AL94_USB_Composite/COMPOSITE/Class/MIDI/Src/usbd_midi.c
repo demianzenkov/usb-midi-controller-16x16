@@ -40,6 +40,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdint.h>
 #include "usbd_midi.h"
 #include "usbd_desc.h"
 #include "usbd_ctlreq.h"
@@ -134,20 +135,47 @@ USBD_ClassTypeDef  USBD_MIDI =
 /* USB MIDI device Configuration Descriptor */
 __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE]  __ALIGN_END =
 {
-  0x09,                       /* bLength: Configuration Descriptor size */
-  USB_DESC_TYPE_CONFIGURATION,/* bDescriptorType: Configuration */
-  USB_MIDI_CONFIG_DESC_SIZE,
-  0x00,                       /*Length of the total configuration block, including this descriptor, in bytes.*/
-  0x01,                       /*bNumInterfaces: 1 interface*/
-  0x01,                       /*bConfigurationValue: ID of this configuration. */
-  0x00,                       /*iConfiguration: Index of string descriptor describing the configuration (Unused.)*/
-  0x80,                       /*bmAttributes: Bus Powered device, not Self Powered, no Remote wakeup capability. */
-  0xFA,                       /*MaxPower 500 mA: this current is used for detecting Vbus*/
-  
-  /************** MIDI Adapter Standard MS Interface Descriptor ****************/
+  /* Configuration Descriptor */
+  0x09,                                 /*bLength: Configuration Descriptor size*/
+  USB_DESC_TYPE_CONFIGURATION,         /*bDescriptorType: Configuration*/
+  LOBYTE(USB_MIDI_CONFIG_DESC_SIZE),   /*wTotalLength: Total size*/
+  HIBYTE(USB_MIDI_CONFIG_DESC_SIZE),
+  0x02,                                /*bNumInterfaces: 2 interfaces (Audio Control + MIDI Streaming)*/
+  0x01,                                /*bConfigurationValue: Configuration value*/
+  0x00,                                /*iConfiguration: Index of string descriptor*/
+#if (USBD_SELF_POWERED == 1U)
+  0xC0,                                /*bmAttributes: Self powered*/
+#else
+  0x80,                                /*bmAttributes: Bus powered*/
+#endif
+  USBD_MAX_POWER,                      /*MaxPower*/
+
+  /************** Audio Control Interface Descriptor ****************/
   0x09,                   /*bLength: Interface Descriptor size*/
   USB_DESC_TYPE_INTERFACE,/*bDescriptorType: Interface descriptor type*/
   0x00,                   /*bInterfaceNumber: Index of this interface.*/
+  0x00,                   /*bAlternateSetting: Alternate setting*/
+  0x00,                   /*bNumEndpoints: No endpoints for control interface*/
+  0x01,                   /*bInterfaceClass: AUDIO*/
+  0x01,                   /*bInterfaceSubClass: AUDIOCONTROL*/
+  0x00,                   /*nInterfaceProtocol: Unused*/
+  0x00,                   /*iInterface: Unused*/
+
+  /************** Audio Control Interface Header Descriptor ****************/
+  0x09,                   /*bLength: Header Descriptor size*/
+  0x24,                   /*bDescriptorType: CS_INTERFACE descriptor*/
+  0x01,                   /*bDescriptorSubtype: HEADER subtype*/
+  0x00,                   /*bcdADC: Revision of this class specification*/
+  0x01,                   /*bcdADC: (LSB)*/
+  0x09,                   /*wTotalLength: Total size of class-specific descriptors (LSB)*/
+  0x00,                   /*wTotalLength: (MSB)*/
+  0x01,                   /*bInCollection: Number of streaming interfaces*/
+  0x01,                   /*baInterfaceNr(1): MIDIStreaming interface number*/
+
+  /************** MIDI Adapter Standard MS Interface Descriptor ****************/
+  0x09,                   /*bLength: Interface Descriptor size*/
+  USB_DESC_TYPE_INTERFACE,/*bDescriptorType: Interface descriptor type*/
+  0x01,                   /*bInterfaceNumber: Index of this interface.*/
   0x00,                   /*bAlternateSetting: Alternate setting*/
   0x02,                   /*bNumEndpoints*/
   0x01,                   /*bInterfaceClass: AUDIO*/
@@ -162,8 +190,8 @@ __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE]  __ALI
   0x01,                 /*bDescriptorSubtype: MS_HEADER subtype*/
   0x00,
   0x01,                 /*BcdADC: Revision of this class specification*/
-  USB_MIDI_REPORT_DESC_SIZE,
-  0x00,                  /*wTotalLength: Total size of class-specific descriptors*/
+  (USB_MIDI_REPORT_DESC_SIZE & 0xFF),
+  ((USB_MIDI_REPORT_DESC_SIZE >> 8) & 0xFF),  /*wTotalLength: Total size of class-specific descriptors*/
 
 #if MIDI_IN_PORTS_NUM >= 1
   /******************** MIDI Adapter MIDI IN Jack Descriptor (External) ********************/
@@ -621,12 +649,12 @@ static uint8_t  USBD_MIDI_Init (USBD_HandleTypeDef *pdev,
   
   USBD_LL_OpenEP(pdev,
                  MIDI_EPIN_ADDR,
-                 USBD_EP_TYPE_INTR,
+                 USBD_EP_TYPE_BULK,
                  MIDI_EPIN_SIZE);  
 
   USBD_LL_OpenEP(pdev,
                MIDI_EPOUT_ADDR,
-               USBD_EP_TYPE_INTR,
+               USBD_EP_TYPE_BULK,
                MIDI_EPOUT_SIZE);
   
   USBD_LL_PrepareReceive(pdev, 
@@ -658,7 +686,8 @@ static uint8_t  USBD_MIDI_DeInit (USBD_HandleTypeDef *pdev,
                                  uint8_t cfgidx)
 {
   /* Close MIDI EPs */
-  USBD_LL_CloseEP(pdev, MIDI_EPIN_SIZE);
+  USBD_LL_CloseEP(pdev, MIDI_EPIN_ADDR);
+  USBD_LL_CloseEP(pdev, MIDI_EPOUT_ADDR);  // Added missing OUT endpoint
   
   /* FRee allocated memory */
   if(pdev->pClassData_MIDI != NULL)
@@ -889,14 +918,43 @@ uint8_t USBD_MIDI_RegisterInterface(USBD_HandleTypeDef *pdev,
 
 void USBD_Update_MIDI_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t out_ep, uint8_t str_idx)
 {
+  // Update Audio Control Interface number (byte 11 - after config descriptor)
   desc[11] = itf_no;
-  desc[17] = str_idx;
-  desc[29] = in_ep;
-  desc[36] = out_ep;
+  
+  // Update MIDI Streaming Interface number (byte 29 - after config descriptor)  
+  desc[29] = itf_no + 1;
+  
+  // Update MIDI Streaming Interface string index (byte 35 - after config descriptor)
+  desc[35] = str_idx;
+  
+  // Update Audio Control Interface streaming interface reference (byte 26 - after config descriptor)
+  desc[26] = itf_no + 1;
+  
+  // Find and update endpoint addresses in the descriptor
+  // Search for endpoint descriptors (0x05 = USB_DESC_TYPE_ENDPOINT)
+  // Start searching after the configuration descriptor (offset 9)
+  uint16_t desc_len = USB_MIDI_CONFIG_DESC_SIZE;
+  uint16_t pos = 9; // Start after config descriptor
+  
+  while (pos < desc_len - 1) {
+    if (desc[pos + 1] == USB_DESC_TYPE_ENDPOINT) {
+      // Found endpoint descriptor, check if it's IN or OUT
+      uint8_t ep_addr = desc[pos + 2];
+      if (ep_addr & 0x80) {
+        // IN endpoint
+        desc[pos + 2] = in_ep;
+      } else {
+        // OUT endpoint  
+        desc[pos + 2] = out_ep;
+      }
+    }
+    pos += desc[pos]; // Move to next descriptor using bLength
+    if (desc[pos] == 0) break; // Avoid infinite loop
+  }
 
   MIDI_IN_EP = in_ep;
   MIDI_OUT_EP = out_ep;
-  MIDI_ITF_NBR = itf_no;
+  MIDI_ITF_NBR = itf_no + 1; // MIDI Streaming interface number
   MIDI_STR_DESC_IDX = str_idx;
 }
 

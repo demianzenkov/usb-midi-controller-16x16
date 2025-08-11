@@ -29,6 +29,7 @@
 #ifndef __USB_MIDI_H
 #define __USB_MIDI_H
 
+#include <stdint.h>
 #include  "usbd_ioreq.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -47,7 +48,7 @@
 #define MIDI_EPOUT_ADDR                0x01
 #define MIDI_EPOUT_SIZE                0x40
 
-#define USB_MIDI_CLASS_DESC_SHIFT      18
+#define USB_MIDI_CLASS_DESC_SHIFT      36
 #define USB_MIDI_DESC_SIZE             7
 #define USB_MIDI_REPORT_DESC_SIZE      (MIDI_IN_PORTS_NUM * 16 + MIDI_OUT_PORTS_NUM * 16 + 33)
 #define USB_MIDI_CONFIG_DESC_SIZE      (USB_MIDI_REPORT_DESC_SIZE + USB_MIDI_CLASS_DESC_SHIFT)
