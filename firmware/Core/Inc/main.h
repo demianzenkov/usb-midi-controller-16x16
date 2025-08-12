@@ -202,7 +202,7 @@ void Error_Handler(void);
 #define D13_CS_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
-
+void MX_FREERTOS_Init();
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

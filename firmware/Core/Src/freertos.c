@@ -60,7 +60,7 @@ osThreadId defaultTaskHandle;
 
 void StartDefaultTask(void const * argument);
 
-void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+// void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
 void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );

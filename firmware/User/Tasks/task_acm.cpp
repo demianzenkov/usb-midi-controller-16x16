@@ -129,6 +129,28 @@ void TaskACM_parseInputBuffer(char * buffer) {
 				CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
 			}
 		}
+		else if(strncmp(cmd, "/set/channel/", 13) == 0) {
+			cmd += 13; // skip "/set/channel/"
+			uint8_t disp_id = atoi(cmd);
+			if(disp_id > 15) {
+				CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
+				return;
+			}
+			cmd = strchr(cmd, '/');
+			if(cmd != NULL) {
+				cmd++; // skip '/'
+				int str_len = strlen(cmd);
+				if(str_len > 4) {
+					CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
+					return;
+				}
+				TaskLVGL_showChannelOnDisplay(disp_id, cmd);
+				CDC_Transmit(0, (uint8_t *)"OK\n\r", 4);
+			}
+			else {
+				CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
+			}
+		}
 		else {
 			CDC_Transmit(0, (uint8_t *)"FAIL\n\r", 6);
 		}

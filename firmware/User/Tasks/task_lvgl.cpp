@@ -10,11 +10,13 @@
 #include "main.h"
 #include "lvgl.h"
 #include "src/drivers/display/st7735/lv_st7735.h"
-#include "lv_lcd_generic_mipi.h"
+#include "lv_lcd_custom_mipi.h"
 #include "display.h"
 #include "ui.h"
 #include "screens.h"
 #include "task_lvgl.h"
+#include "string.h"
+
 
 #define TEST_UI 0
 
@@ -29,6 +31,7 @@ SemaphoreHandle_t lvgl_ready_sem;
 SemaphoreHandle_t ui_busy_mutex;
 QueueHandle_t show_name_queue;
 QueueHandle_t show_value_queue;
+QueueHandle_t show_channel_queue;
 QueueHandle_t show_image_queue;
 
 lv_display_t *lcd_disp;
@@ -66,9 +69,10 @@ void TaskLVGL_createTask() {
     ui_busy_mutex = xSemaphoreCreateMutex();
     xSemaphoreGive(ui_busy_mutex);
 
-    show_name_queue = xQueueCreate(4, sizeof(show_name_queue_t));
+    show_name_queue = xQueueCreate(4, sizeof(show_string_queue_t));
     show_value_queue = xQueueCreate(10, sizeof(show_value_queue_t));
     show_image_queue = xQueueCreate(10, sizeof(show_img_queue_t));
+	show_channel_queue = xQueueCreate(10, sizeof(show_string_queue_t));
 
     ui_ready_sem = xSemaphoreCreateBinary();
 
@@ -90,15 +94,25 @@ void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value) {
     show_value.value = value;
     xQueueSend(show_value_queue, &show_value, portMAX_DELAY);
 }
+
 void TaskLVGL_showStringOnDisplay(uint8_t disp, const char * str) {
 	if(strlen(str) > MAX_NAME_LENGTH - 1) {
-		LV_LOG_ERROR("String too long for display: %s", str);
 		return;
 	}
-	show_name_queue_t show_name = {};
+	show_string_queue_t show_name = {};
 	show_name.display_id = disp;
 	strncpy(show_name.str, str, sizeof(show_name.str));
 	xQueueSend(show_name_queue, &show_name, portMAX_DELAY);
+}
+
+void TaskLVGL_showChannelOnDisplay(uint8_t disp, const char * str) {
+	if(strlen(str) > MAX_NAME_LENGTH - 1) {
+		return;
+	}
+	show_string_queue_t show_name = {};
+	show_name.display_id = disp;
+	strncpy(show_name.str, str, sizeof(show_name.str));
+	xQueueSend(show_channel_queue, &show_name, portMAX_DELAY);
 }
 
 void TaskLVGL_ui_task(void const *arg) {
@@ -118,7 +132,7 @@ for(int i = 0; i < 16; i++) {
 
     xSemaphoreGive(ui_ready_sem);
     
-    show_name_queue_t show_name;
+    show_string_queue_t show_name;
     show_value_queue_t show_value;
     show_img_queue_t show_img;
     for(;;) {
@@ -140,12 +154,20 @@ for(int i = 0; i < 16; i++) {
             xSemaphoreGive(ui_busy_mutex);
             osDelay(30);
         }
-        if(xQueueReceive(show_image_queue, &show_img, 1) == pdTRUE) {
-            xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
-            set_active_display(show_img.display_id);
-            ui_show_image(show_img.img_buf, show_img.img_size);
-            xSemaphoreGive(ui_busy_mutex);
-        }
+		if(xQueueReceive(show_channel_queue, &show_name, 1) == pdTRUE) {
+			xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
+			set_active_display(show_name.display_id);
+			lv_obj_t * obj = objects.label_channel;
+			lv_label_set_text(obj, show_name.str);
+			xSemaphoreGive(ui_busy_mutex);
+			osDelay(30);
+		}
+//        if(xQueueReceive(show_image_queue, &show_img, 1) == pdTRUE) {
+//            xSemaphoreTake(ui_busy_mutex, portMAX_DELAY);
+//            set_active_display(show_img.display_id);
+//            ui_show_image(show_img.img_buf, show_img.img_size);
+//            xSemaphoreGive(ui_busy_mutex);
+//        }
     }
 }
 
@@ -167,10 +189,10 @@ void TaskLVGL_task(void const *arg) {
 
 	for(int i = 0; i < 16; i++) {
 		set_active_display(i);
-		lv_lcd_init_controller(lcd_disp, LV_LCD_FLAG_BGR);
+		lv_lcd_custom_init_controller(lcd_disp, LV_LCD_FLAG_BGR);
 	}
 
-	lv_lcd_set_callbacks(lcd_disp);
+	lv_lcd_custom_mipi_set_callbacks(lcd_disp);
 
 	for(int i = 0; i < 16; i++) {
 	        set_active_display(i);
@@ -189,13 +211,13 @@ void TaskLVGL_task(void const *arg) {
 
 	uint32_t buf_size = LCD_V_PHYSICAL_RES * LCD_DRAW_BUFF_HEIGHT * lv_color_format_get_size(lv_display_get_color_format(lcd_disp));
 
-	buf1 = lv_malloc(buf_size);
+	buf1 = (lv_color_t *)lv_malloc(buf_size);
 	if (buf1 == NULL) {
 		LV_LOG_ERROR("display draw buffer malloc failed");
 		return;
 	}
 
-	buf2 = lv_malloc(buf_size);
+	buf2 = (lv_color_t *)lv_malloc(buf_size);
 	if (buf2 == NULL) {
 		LV_LOG_ERROR("display buffer malloc failed");
 		lv_free(buf1);
@@ -219,7 +241,7 @@ void TaskLVGL_test_ui_task(void const *arg) {
     xSemaphoreTake(ui_ready_sem, portMAX_DELAY);
     
     for(int i = 0; i < 16; i++) {
-        show_name_queue_t show_name;
+        show_string_queue_t show_name;
         show_name.display_id = i;
         sprintf(show_name.str, "Display %d", i);
         xQueueSend(show_name_queue, &show_name, portMAX_DELAY);

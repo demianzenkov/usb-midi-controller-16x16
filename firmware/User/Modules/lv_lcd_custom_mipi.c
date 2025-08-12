@@ -7,7 +7,7 @@
  *      INCLUDES
  *********************/
 
-#include "lv_lcd_generic_mipi.h"
+#include "lv_lcd_custom_mipi.h"
 
 #if LV_USE_GENERIC_MIPI
 
@@ -45,38 +45,6 @@ static void flush_cb(lv_display_t * disp, const lv_area_t * area, uint8_t * px_m
  *   GLOBAL FUNCTIONS
  **********************/
 
-lv_display_t * lv_lcd_generic_mipi_create(uint32_t hor_res, uint32_t ver_res, lv_lcd_flag_t flags,
-                                          lv_lcd_send_cmd_cb_t send_cmd_cb, lv_lcd_send_color_cb_t send_color_cb)
-{
-    lv_display_t * disp = lv_display_create(hor_res, ver_res);
-    if(disp == NULL) {
-        return NULL;
-    }
-
-    lv_lcd_generic_mipi_driver_t * drv = (lv_lcd_generic_mipi_driver_t *)lv_malloc(sizeof(lv_lcd_generic_mipi_driver_t));
-    if(drv == NULL) {
-        lv_display_delete(disp);
-        return NULL;
-    }
-
-    /* init driver struct */
-    drv->disp = disp;
-    drv->send_cmd = send_cmd_cb;
-    drv->send_color = send_color_cb;
-    lv_display_set_driver_data(disp, (void *)drv);
-
-    /* init controller */
-    init(drv, flags);
-
-    /* register resolution change callback (NOTE: this handles screen rotation as well) */
-    lv_display_add_event_cb(disp, res_chg_event_cb, LV_EVENT_RESOLUTION_CHANGED, NULL);
-
-    /* register flush callback */
-    lv_display_set_flush_cb(disp, flush_cb);
-
-    return disp;
-}
-
 
 lv_display_t * lv_lcd_custom_mipi_create(uint32_t hor_res, uint32_t ver_res, lv_lcd_flag_t flags,
                                           lv_lcd_send_cmd_cb_t send_cmd_cb, lv_lcd_send_color_cb_t send_color_cb)
@@ -100,76 +68,20 @@ lv_display_t * lv_lcd_custom_mipi_create(uint32_t hor_res, uint32_t ver_res, lv_
 }
 
 
-void lv_lcd_init_controller(lv_display_t * disp, lv_lcd_flag_t flags)
+void lv_lcd_custom_init_controller(lv_display_t * disp, lv_lcd_flag_t flags)
 {
 	lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
 	/* init controller */
 	init(drv, flags);
 }
 
-void lv_lcd_set_callbacks(lv_display_t * disp){
+void lv_lcd_custom_mipi_set_callbacks(lv_display_t * disp){
     /* register resolution change callback (NOTE: this handles screen rotation as well) */
     lv_display_add_event_cb(disp, res_chg_event_cb, LV_EVENT_RESOLUTION_CHANGED, NULL);
     /* register flush callback */
     lv_display_set_flush_cb(disp, flush_cb);
 
 }
-
-void lv_lcd_generic_mipi_set_gap(lv_display_t * disp, uint16_t x, uint16_t y)
-{
-    lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
-    drv->x_gap = x;
-    drv->y_gap = y;
-}
-
-void lv_lcd_generic_mipi_set_invert(lv_display_t * disp, bool invert)
-{
-    lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
-    send_cmd(drv, invert ? LV_LCD_CMD_ENTER_INVERT_MODE : LV_LCD_CMD_EXIT_INVERT_MODE, NULL, 0);
-}
-
-void lv_lcd_generic_mipi_set_address_mode(lv_display_t * disp, bool mirror_x, bool mirror_y, bool swap_xy, bool bgr)
-{
-    lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
-    uint8_t mad = drv->madctl_reg & ~(LV_LCD_MASK_RGB_ORDER);
-    if(bgr) {
-        mad |= LV_LCD_BIT_RGB_ORDER__BGR;
-    }
-    drv->madctl_reg = mad;
-    drv->mirror_x = mirror_x;
-    drv->mirror_y = mirror_y;
-    drv->swap_xy = swap_xy;
-    set_rotation(drv, lv_display_get_rotation(disp));   /* update screen */
-}
-
-void lv_lcd_generic_mipi_set_gamma_curve(lv_display_t * disp, uint8_t gamma)
-{
-    lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
-    send_cmd(drv, LV_LCD_CMD_SET_GAMMA_CURVE, (uint8_t[]) {
-        gamma,
-    }, 1);
-}
-
-void lv_lcd_generic_mipi_send_cmd_list(lv_display_t * disp, const uint8_t * cmd_list)
-{
-    lv_lcd_generic_mipi_driver_t * drv = get_driver(disp);
-    while(1) {
-        uint8_t cmd = *cmd_list++;
-        uint8_t num = *cmd_list++;
-        if(cmd == LV_LCD_CMD_DELAY_MS) {
-            if(num == LV_LCD_CMD_EOF)   /* end of list */
-                break;
-            else {                      /* delay in 10 ms units*/
-                lv_delay_ms((uint32_t)(num) * 10);
-            }
-        }
-        else {
-            drv->send_cmd(drv->disp, &cmd, 1, cmd_list, num);
-            cmd_list += num;
-        }
-    }
-}
-
 /**********************
  *   STATIC FUNCTIONS
  **********************/

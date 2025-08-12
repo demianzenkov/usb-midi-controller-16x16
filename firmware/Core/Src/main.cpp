@@ -57,7 +57,7 @@ uint32_t value_adc[4];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
+// void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -71,7 +71,7 @@ void MX_FREERTOS_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
+extern "C" int main(void)
 {
   /* USER CODE BEGIN 1 */
 

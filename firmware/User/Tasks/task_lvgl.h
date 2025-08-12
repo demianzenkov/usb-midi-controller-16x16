@@ -10,6 +10,12 @@
 
 #include "display.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define LCD_H_RES       132
 #define LCD_V_RES       162
 
@@ -24,11 +30,12 @@
 void TaskLVGL_createTask();
 void TaskLVGL_showValueOnDisplay(uint8_t disp, int32_t value);
 void TaskLVGL_showStringOnDisplay(uint8_t disp, const char * str);
+void TaskLVGL_showChannelOnDisplay(uint8_t disp, const char * str);
 
 typedef struct{
     uint8_t display_id;
     char str[MAX_NAME_LENGTH];
-} show_name_queue_t;
+} show_string_queue_t;
 
 typedef struct{
     uint8_t display_id;
@@ -40,5 +47,11 @@ typedef struct{
     uint8_t * img_buf;
     size_t img_size;
 } show_img_queue_t;
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* TASK_LVGL_H_ */

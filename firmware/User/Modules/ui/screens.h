@@ -1,7 +1,7 @@
 #ifndef EEZ_LVGL_UI_SCREENS_H
 #define EEZ_LVGL_UI_SCREENS_H
 
-#include <lvgl/lvgl.h>
+#include <lvgl.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,6 +15,7 @@ typedef struct _objects_t {
     lv_obj_t *bar_level;
     lv_obj_t *label_level;
     lv_obj_t *label_name;
+    lv_obj_t *label_channel;
 } objects_t;
 
 extern objects_t objects;
