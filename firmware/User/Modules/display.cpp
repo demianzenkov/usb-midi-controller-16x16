@@ -7,6 +7,7 @@
 
 #include "display.h"
 #include "src/drivers/display/st7735/lv_st7735.h"
+#include "task_lvgl.h"
 
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
@@ -14,26 +15,26 @@ extern SPI_HandleTypeDef hspi3;
 extern SPI_HandleTypeDef hspi4;
 
 
-extern lv_display_t *lcd_disp;
+//extern lv_display_t *lcd_disp;
 volatile int lcd_bus_busy = 0;
 volatile display_state_t * ds_active;
 
 display_state_t ds[16] = {
         {0, &hspi1, D11_CS_GPIO_Port, D11_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
-        {1, &hspi1, D12_CS_GPIO_Port, D12_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
-        {2, &hspi1, D13_CS_GPIO_Port, D13_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
-        {3, &hspi1, D14_CS_GPIO_Port, D14_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
-        {4, &hspi3, D21_CS_GPIO_Port, D21_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
+        {1, &hspi3, D21_CS_GPIO_Port, D21_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
+        {2, &hspi2, D31_CS_GPIO_Port, D31_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
+        {3, &hspi4, D41_CS_GPIO_Port, D41_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
+        {4, &hspi1, D12_CS_GPIO_Port, D12_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
         {5, &hspi3, D22_CS_GPIO_Port, D22_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
-        {6, &hspi3, D23_CS_GPIO_Port, D23_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
-        {7, &hspi3, D24_CS_GPIO_Port, D24_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
-        {8, &hspi2, D31_CS_GPIO_Port, D31_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
-        {9, &hspi2, D32_CS_GPIO_Port, D32_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
+        {6, &hspi2, D32_CS_GPIO_Port, D32_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
+        {7, &hspi4, D42_CS_GPIO_Port, D42_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
+        {8, &hspi1, D13_CS_GPIO_Port, D13_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
+        {9, &hspi3, D23_CS_GPIO_Port, D23_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
         {10, &hspi2, D33_CS_GPIO_Port, D33_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
-        {11, &hspi2, D34_CS_GPIO_Port, D34_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
-        {12, &hspi4, D41_CS_GPIO_Port, D41_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
-        {13, &hspi4, D42_CS_GPIO_Port, D42_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
-        {14, &hspi4, D43_CS_GPIO_Port, D43_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
+        {11, &hspi4, D43_CS_GPIO_Port, D43_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin},
+        {12, &hspi1, D14_CS_GPIO_Port, D14_CS_Pin, D1_RESET_GPIO_Port, D1_RESET_Pin, D1_RS_GPIO_Port, D1_RS_Pin},
+        {13, &hspi3, D24_CS_GPIO_Port, D24_CS_Pin, D2_RESET_GPIO_Port, D2_RESET_Pin, D2_RS_GPIO_Port, D2_RS_Pin},
+        {14, &hspi2, D34_CS_GPIO_Port, D34_CS_Pin, D3_RESET_GPIO_Port, D3_RESET_Pin, D3_RS_GPIO_Port, D3_RS_Pin},
         {15, &hspi4, D44_CS_GPIO_Port, D44_CS_Pin, D4_RESET_GPIO_Port, D4_RESET_Pin, D4_RS_GPIO_Port, D4_RS_Pin}
 };
 
@@ -45,7 +46,7 @@ static void lcd_color_transfer_ready_cb(SPI_HandleTypeDef *hspi) {
 	/* CS high */
 	HAL_GPIO_WritePin(ds_active->cs_port, ds_active->cs_pin, GPIO_PIN_SET);
 	lcd_bus_busy = 0;
-	lv_display_flush_ready(lcd_disp);
+	lv_display_flush_ready(ui.lcd_disp);
 }
 
 /* Initialize LCD I/O bus, reset LCD */
@@ -80,7 +81,7 @@ void lcd_send_cmd(lv_display_t *disp, const uint8_t *cmd,
 	/* CS low */
     HAL_GPIO_WritePin(ds_active->cs_port, ds_active->cs_pin, GPIO_PIN_RESET);
 	/* send command */
-	if (HAL_SPI_Transmit(ds_active->hspi, cmd, cmd_size, BUS_SPI1_POLL_TIMEOUT)
+	if (HAL_SPI_Transmit(ds_active->hspi, (uint8_t *)cmd, cmd_size, BUS_SPI1_POLL_TIMEOUT)
 			== HAL_OK) {
 		/* DCX high (data) */
         HAL_GPIO_WritePin(ds_active->rs_port, ds_active->rs_pin, GPIO_PIN_SET);
@@ -108,7 +109,7 @@ void lcd_send_color(lv_display_t *disp, const uint8_t *cmd,
 	/* CS low */
     HAL_GPIO_WritePin(ds_active->cs_port, ds_active->cs_pin, GPIO_PIN_RESET);
 	/* send command */
-	if (HAL_SPI_Transmit(ds_active->hspi, cmd, cmd_size, BUS_SPI1_POLL_TIMEOUT)
+	if (HAL_SPI_Transmit(ds_active->hspi, (uint8_t *)cmd, cmd_size, BUS_SPI1_POLL_TIMEOUT)
 			== HAL_OK) {
 		/* DCX high (data) */
         HAL_GPIO_WritePin(ds_active->rs_port, ds_active->rs_pin, GPIO_PIN_SET);

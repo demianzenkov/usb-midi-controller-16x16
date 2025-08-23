@@ -8,6 +8,10 @@
 
 #include "main.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MIDI_NOTE_OFF   0x80
 #define MIDI_NOTE_ON    0x90
 #define MIDI_CC         0xB0
@@ -24,6 +28,10 @@ typedef struct {
 
 void TaskMIDI_createTask();
 int TaskMIDI_sendEvent(midi_event_t * event);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif /* TASK_MIDI_H_ */

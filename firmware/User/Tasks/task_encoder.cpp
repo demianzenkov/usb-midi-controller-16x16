@@ -8,6 +8,7 @@
 #include "task_midi.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "stdio.h"
 
 #define ENC_DEBOUNCE_HIGH_FILTER    50
 #define ENC_DEBOUNCE_LOW_FILTER     3000
@@ -43,7 +44,10 @@ void TaskEncoder_createTask() {
        enc_midi_ev.note = MIDI_CC_MODULATION;
        enc_midi_ev.value = encoder_values[i];
        TaskMIDI_sendEvent(&enc_midi_ev);
-       TaskLVGL_showValueOnDisplay(i, encoder_values[i]);
+       ui.showBarLevel(i, encoder_values[i]);
+	   char ch_str[3];
+	   snprintf(ch_str, sizeof(ch_str), "%d", i+1);
+	   ui.showChannel(i, ch_str);
    }
     
  	while (1) {
@@ -55,15 +59,13 @@ void TaskEncoder_createTask() {
                  if(ev.prev_state_a == 0 && ev.state_a == 1) {
                      if(ev.prev_state_b == 0 && ev.state_b == 1) {
                      	if((ev.encoder_id != 14) && (ev.encoder_id != 15)) {
-                            if(encoder_values[ev.encoder_id] > ENCODER_MIN_VALUE)
+                            if(encoder_values[ev.encoder_id] > ENCODER_MIN_VALUE) {
                                 encoder_values[ev.encoder_id]--;
-                            else
-                                encoder_values[ev.encoder_id] = ENCODER_MAX_VALUE;
+							}
                          } else {
-                                if(encoder_values[ev.encoder_id] < ENCODER_MAX_VALUE)
-                                    encoder_values[ev.encoder_id]++;
-                                else
-                                    encoder_values[ev.encoder_id] = ENCODER_MIN_VALUE;
+							if(encoder_values[ev.encoder_id] < ENCODER_MAX_VALUE) {
+								encoder_values[ev.encoder_id]++;
+							}
                          }
                          
                      	 enc_midi_ev.message_type = MIDI_CC;
@@ -72,22 +74,18 @@ void TaskEncoder_createTask() {
 						 enc_midi_ev.value = encoder_values[ev.encoder_id];
 
                          TaskMIDI_sendEvent(&enc_midi_ev);
-                         TaskLVGL_showValueOnDisplay(ev.encoder_id, encoder_values[ev.encoder_id]);
+                         ui.showBarLevel(ev.encoder_id, encoder_values[ev.encoder_id]);
                      }
                  } else if(ev.prev_state_a == 1 && ev.state_a == 0) {
                      if(ev.prev_state_b == 0 && ev.state_b == 1) {
                          if((ev.encoder_id != 14) && (ev.encoder_id != 15)) {
-                                if(encoder_values[ev.encoder_id] < ENCODER_MAX_VALUE)
-                                    encoder_values[ev.encoder_id]++;
-                                else
-                                    encoder_values[ev.encoder_id] = ENCODER_MIN_VALUE;
-                             
+							if(encoder_values[ev.encoder_id] < ENCODER_MAX_VALUE) {
+								encoder_values[ev.encoder_id]++;
+							}
                          } else {
-                                if(encoder_values[ev.encoder_id] > ENCODER_MIN_VALUE)
-                                    encoder_values[ev.encoder_id]--;
-                                else
-                                    encoder_values[ev.encoder_id] = ENCODER_MAX_VALUE;
-                             
+							if(encoder_values[ev.encoder_id] > ENCODER_MIN_VALUE) {
+								encoder_values[ev.encoder_id]--;
+							}
                          }
                          
                          enc_midi_ev.message_type = MIDI_CC;
@@ -96,7 +94,7 @@ void TaskEncoder_createTask() {
                          enc_midi_ev.value = encoder_values[ev.encoder_id];
                          
                          TaskMIDI_sendEvent(&enc_midi_ev);
-                         TaskLVGL_showValueOnDisplay(ev.encoder_id, encoder_values[ev.encoder_id]);
+                         ui.showBarLevel(ev.encoder_id, encoder_values[ev.encoder_id]);
                      }
                  }
          }

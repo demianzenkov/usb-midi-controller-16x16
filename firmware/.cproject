@@ -57,7 +57,6 @@
 									<listOptionValue builtIn="false" value="../User/Tasks"/>
 									<listOptionValue builtIn="false" value="../User/Modules"/>
 									<listOptionValue builtIn="false" value="../User/Modules/ui"/>
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/Inc"/>
 									<listOptionValue builtIn="false" value="../Composite"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/COMPOSITE/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/HID_CUSTOM/Inc"/>
@@ -92,7 +91,6 @@
 									<listOptionValue builtIn="false" value="../User/Tasks"/>
 									<listOptionValue builtIn="false" value="../User/Modules"/>
 									<listOptionValue builtIn="false" value="../User/Modules/ui"/>
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/Inc"/>
 									<listOptionValue builtIn="false" value="../Composite"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/COMPOSITE/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/HID_CUSTOM/Inc"/>
@@ -151,7 +149,6 @@
 									<listOptionValue builtIn="false" value="../User/Tasks"/>
 									<listOptionValue builtIn="false" value="../User/Modules"/>
 									<listOptionValue builtIn="false" value="../User/Modules/ui"/>
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/Inc"/>
 									<listOptionValue builtIn="false" value="../Composite"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/COMPOSITE/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/HID_CUSTOM/Inc"/>
@@ -178,7 +175,6 @@
 									<listOptionValue builtIn="false" value="../User/Tasks"/>
 									<listOptionValue builtIn="false" value="../User/Modules"/>
 									<listOptionValue builtIn="false" value="../User/Modules/ui"/>
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MIDI/Inc"/>
 									<listOptionValue builtIn="false" value="../Composite"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/COMPOSITE/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/AL94_USB_Composite/COMPOSITE/Class/HID_CUSTOM/Inc"/>
@@ -212,6 +208,7 @@
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board.122208650.1989997527.1069920141" name="Board" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.target_board.122208650.1989997527"/>
 							<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.1942447024.1503459279.1087825095" name="Defaults" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.option.defaults.1942447024.1503459279"/>
 							<option id="com.st.stm32cube.ide.mcu.debug.option.cpuclock.1443949778.1970420778.337544241" name="Cpu clock frequence" superClass="com.st.stm32cube.ide.mcu.debug.option.cpuclock.1443949778.1970420778"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform" isAbstract="false" osList="all" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.targetplatform"/>
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.706643658" name="MCU GCC Assembler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1186911666">
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.643450900" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>

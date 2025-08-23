@@ -8,7 +8,15 @@
 
 #include "main.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void TaskButtons_createTask();
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* TASK_BUTTONS_H_ */

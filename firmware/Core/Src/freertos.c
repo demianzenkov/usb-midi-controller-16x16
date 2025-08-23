@@ -25,11 +25,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "task_buttons.h"
-#include "task_encoder.h"
-#include "task_lvgl.h"
-#include "task_midi.h"
-#include "task_acm.h"
+// #include "task_buttons.h"
+// #include "task_encoder.h"
+// #include "task_lvgl.h"
+// #include "task_midi.h"
+// #include "task_acm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,12 +110,12 @@ void MX_FREERTOS_Init(void) {
 //  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-	TaskLVGL_createTask();
-	TaskMIDI_createTask();
-	TaskButtons_createTask();
-	TaskEncoder_createTask();
+	// TaskLVGL_createTask();
+	// TaskMIDI_createTask();
+	// TaskButtons_createTask();
+	// TaskEncoder_createTask();
 
- 	TaskACM_createTask();
+ 	// TaskACM_createTask();
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 

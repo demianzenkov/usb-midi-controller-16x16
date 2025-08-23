@@ -103,7 +103,7 @@ USBD_CDC_ACM_LineCodingTypeDef Line_Coding[NUMBER_OF_CDC];
 uint32_t Write_Index[NUMBER_OF_CDC]; /* keep track of received data over UART */
 uint32_t Read_Index[NUMBER_OF_CDC];  /* keep track of sent data to USB */
 
-extern QueueHandle_t acm_event_queue;
+// extern QueueHandle_t acm_event_queue;
 // static acm_event_t acm_ev;
 /* USER CODE END PRIVATE_VARIABLES */
 
@@ -427,7 +427,7 @@ static int8_t CDC_Receive(uint8_t cdc_ch, uint8_t *Buf, uint32_t *Len)
 	acm_event_t acm_ev = {};
     acm_ev.len = *Len;
     memcpy(acm_ev.buffer, Buf, *Len);
-    if(xQueueSendFromISR(acm_event_queue, &acm_ev, 0) != pdPASS) {
+    if(xQueueSendFromISR(acm.acm_event_queue, &acm_ev, 0) != pdPASS) {
         return (USBD_OK);
     }
 

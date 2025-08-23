@@ -204,13 +204,13 @@ void EXTI1_IRQHandler(void)
   /* USER CODE END EXTI1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(ENC34_A_Pin);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
-	encoder_ev[11].ts = HAL_GetTick();
-	encoder_ev[11].prev_state_a = encoder_ev[11].state_a;
-	encoder_ev[11].state_a = HAL_GPIO_ReadPin(ENC34_A_GPIO_Port, ENC34_A_Pin);
-	encoder_ev[11].prev_state_b = encoder_ev[11].state_b;
-	encoder_ev[11].state_b = HAL_GPIO_ReadPin(ENC34_B_GPIO_Port, ENC34_B_Pin);
-	encoder_ev[11].prev_ts = encoder_ev[11].ts;
-	xQueueSendFromISR(encoder_queue, &encoder_ev[11], NULL);
+	encoder_ev[14].ts = HAL_GetTick();
+	encoder_ev[14].prev_state_a = encoder_ev[14].state_a;
+	encoder_ev[14].state_a = HAL_GPIO_ReadPin(ENC34_A_GPIO_Port, ENC34_A_Pin);
+	encoder_ev[14].prev_state_b = encoder_ev[14].state_b;
+	encoder_ev[14].state_b = HAL_GPIO_ReadPin(ENC34_B_GPIO_Port, ENC34_B_Pin);
+	encoder_ev[14].prev_ts = encoder_ev[14].ts;
+	xQueueSendFromISR(encoder_queue, &encoder_ev[14], NULL);
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
@@ -224,13 +224,13 @@ void EXTI2_IRQHandler(void)
   /* USER CODE END EXTI2_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(ENC13_A_Pin);
   /* USER CODE BEGIN EXTI2_IRQn 1 */
-	encoder_ev[2].prev_state_a = encoder_ev[2].state_a;
-	encoder_ev[2].state_a = HAL_GPIO_ReadPin(ENC13_A_GPIO_Port, ENC13_A_Pin);
-	encoder_ev[2].prev_state_b = encoder_ev[2].state_b;
-	encoder_ev[2].state_b = HAL_GPIO_ReadPin(ENC13_B_GPIO_Port, ENC13_B_Pin);
-	encoder_ev[2].prev_ts = encoder_ev[2].ts;
-	encoder_ev[2].ts = HAL_GetTick();
-	xQueueSendFromISR(encoder_queue, &encoder_ev[2], NULL);
+	encoder_ev[8].prev_state_a = encoder_ev[8].state_a;
+	encoder_ev[8].state_a = HAL_GPIO_ReadPin(ENC13_A_GPIO_Port, ENC13_A_Pin);
+	encoder_ev[8].prev_state_b = encoder_ev[8].state_b;
+	encoder_ev[8].state_b = HAL_GPIO_ReadPin(ENC13_B_GPIO_Port, ENC13_B_Pin);
+	encoder_ev[8].prev_ts = encoder_ev[8].ts;
+	encoder_ev[8].ts = HAL_GetTick();
+	xQueueSendFromISR(encoder_queue, &encoder_ev[8], NULL);
   /* USER CODE END EXTI2_IRQn 1 */
 }
 
@@ -244,13 +244,13 @@ void EXTI4_IRQHandler(void)
   /* USER CODE END EXTI4_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(ENC14_A_Pin);
   /* USER CODE BEGIN EXTI4_IRQn 1 */
-	encoder_ev[3].prev_state_a = encoder_ev[3].state_a;
-	encoder_ev[3].state_a = HAL_GPIO_ReadPin(ENC14_A_GPIO_Port, ENC14_A_Pin);
-	encoder_ev[3].prev_state_b = encoder_ev[3].state_b;
-	encoder_ev[3].state_b = HAL_GPIO_ReadPin(ENC14_B_GPIO_Port, ENC14_B_Pin);
-	encoder_ev[3].prev_ts = encoder_ev[3].ts;
-	encoder_ev[3].ts = HAL_GetTick();
-	xQueueSendFromISR(encoder_queue, &encoder_ev[3], NULL);
+	encoder_ev[12].prev_state_a = encoder_ev[12].state_a;
+	encoder_ev[12].state_a = HAL_GPIO_ReadPin(ENC14_A_GPIO_Port, ENC14_A_Pin);
+	encoder_ev[12].prev_state_b = encoder_ev[12].state_b;
+	encoder_ev[12].state_b = HAL_GPIO_ReadPin(ENC14_B_GPIO_Port, ENC14_B_Pin);
+	encoder_ev[12].prev_ts = encoder_ev[12].ts;
+	encoder_ev[12].ts = HAL_GetTick();
+	xQueueSendFromISR(encoder_queue, &encoder_ev[12], NULL);
 
   /* USER CODE END EXTI4_IRQn 1 */
 }
@@ -324,32 +324,32 @@ void EXTI9_5_IRQHandler(void)
 		encoder_ev[15].state_b = HAL_GPIO_ReadPin(ENC44_B_GPIO_Port,
 				ENC44_B_Pin);
 	}
-	if (encoder_ev[6].prev_state_a != encoder_ev[6].state_a) {
-		encoder_ev[6].prev_state_a = encoder_ev[6].state_a;
-		encoder_ev[6].state_a = HAL_GPIO_ReadPin(ENC23_A_GPIO_Port,
+	if (encoder_ev[9].prev_state_a != encoder_ev[9].state_a) {
+		encoder_ev[9].prev_state_a = encoder_ev[9].state_a;
+		encoder_ev[9].state_a = HAL_GPIO_ReadPin(ENC23_A_GPIO_Port,
 				ENC23_A_Pin);
-		encoder_ev[6].prev_state_b = encoder_ev[6].state_b;
-		encoder_ev[6].state_b = HAL_GPIO_ReadPin(ENC23_B_GPIO_Port,
+		encoder_ev[9].prev_state_b = encoder_ev[9].state_b;
+		encoder_ev[9].state_b = HAL_GPIO_ReadPin(ENC23_B_GPIO_Port,
 				ENC23_B_Pin);
-		encoder_ev[6].prev_ts = encoder_ev[6].ts;
-		encoder_ev[6].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[6], NULL);
+		encoder_ev[9].prev_ts = encoder_ev[9].ts;
+		encoder_ev[9].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[9], NULL);
 	} else {
-		encoder_ev[6].state_a = HAL_GPIO_ReadPin(ENC23_A_GPIO_Port,
+		encoder_ev[9].state_a = HAL_GPIO_ReadPin(ENC23_A_GPIO_Port,
 				ENC23_A_Pin);
 	}
-	if (encoder_ev[4].prev_state_a != encoder_ev[4].state_a) {
-		encoder_ev[4].prev_state_a = encoder_ev[4].state_a;
-		encoder_ev[4].state_a = HAL_GPIO_ReadPin(ENC21_A_GPIO_Port,
+	if (encoder_ev[1].prev_state_a != encoder_ev[1].state_a) {
+		encoder_ev[1].prev_state_a = encoder_ev[1].state_a;
+		encoder_ev[1].state_a = HAL_GPIO_ReadPin(ENC21_A_GPIO_Port,
 				ENC21_A_Pin);
-		encoder_ev[4].prev_state_b = encoder_ev[4].state_b;
-		encoder_ev[4].state_b = HAL_GPIO_ReadPin(ENC21_B_GPIO_Port,
+		encoder_ev[1].prev_state_b = encoder_ev[1].state_b;
+		encoder_ev[1].state_b = HAL_GPIO_ReadPin(ENC21_B_GPIO_Port,
 				ENC21_B_Pin);
-		encoder_ev[4].prev_ts = encoder_ev[4].ts;
-		encoder_ev[4].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[4], NULL);
+		encoder_ev[1].prev_ts = encoder_ev[1].ts;
+		encoder_ev[1].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[1], NULL);
 	} else {
-		encoder_ev[4].state_a = HAL_GPIO_ReadPin(ENC21_A_GPIO_Port,
+		encoder_ev[1].state_a = HAL_GPIO_ReadPin(ENC21_A_GPIO_Port,
 				ENC21_A_Pin);
 	}
 
@@ -427,47 +427,47 @@ void EXTI15_10_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(ENC42_A_Pin);
   HAL_GPIO_EXTI_IRQHandler(ENC12_A_Pin);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-	if (encoder_ev[9].prev_state_a != encoder_ev[9].state_a) {
-		encoder_ev[9].prev_state_a = encoder_ev[9].state_a;
-		encoder_ev[9].state_a = HAL_GPIO_ReadPin(ENC32_A_GPIO_Port,
+	if (encoder_ev[6].prev_state_a != encoder_ev[6].state_a) {
+		encoder_ev[6].prev_state_a = encoder_ev[6].state_a;
+		encoder_ev[6].state_a = HAL_GPIO_ReadPin(ENC32_A_GPIO_Port,
 				ENC32_A_Pin);
-		encoder_ev[9].prev_state_b = encoder_ev[9].state_b;
-		encoder_ev[9].state_b = HAL_GPIO_ReadPin(ENC32_B_GPIO_Port,
+		encoder_ev[6].prev_state_b = encoder_ev[6].state_b;
+		encoder_ev[6].state_b = HAL_GPIO_ReadPin(ENC32_B_GPIO_Port,
 				ENC32_B_Pin);
-		encoder_ev[9].prev_ts = encoder_ev[9].ts;
-		encoder_ev[9].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[9], NULL);
+		encoder_ev[6].prev_ts = encoder_ev[6].ts;
+		encoder_ev[6].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[6], NULL);
 	} else {
-		encoder_ev[9].state_a = HAL_GPIO_ReadPin(ENC32_A_GPIO_Port,
+		encoder_ev[6].state_a = HAL_GPIO_ReadPin(ENC32_A_GPIO_Port,
 				ENC32_A_Pin);
 	}
 
-	if (encoder_ev[14].prev_state_b != encoder_ev[14].state_b) {
-		encoder_ev[14].prev_state_a = encoder_ev[14].state_a;
-		encoder_ev[14].state_a = HAL_GPIO_ReadPin(ENC43_A_GPIO_Port,
+	if (encoder_ev[11].prev_state_b != encoder_ev[11].state_b) {
+		encoder_ev[11].prev_state_a = encoder_ev[11].state_a;
+		encoder_ev[11].state_a = HAL_GPIO_ReadPin(ENC43_A_GPIO_Port,
 				ENC43_A_Pin);
-		encoder_ev[14].prev_state_b = encoder_ev[14].state_b;
-		encoder_ev[14].state_b = HAL_GPIO_ReadPin(ENC43_B_GPIO_Port,
+		encoder_ev[11].prev_state_b = encoder_ev[11].state_b;
+		encoder_ev[11].state_b = HAL_GPIO_ReadPin(ENC43_B_GPIO_Port,
 				ENC43_B_Pin);
-		encoder_ev[14].prev_ts = encoder_ev[14].ts;
-		encoder_ev[14].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[14], NULL);
+		encoder_ev[11].prev_ts = encoder_ev[11].ts;
+		encoder_ev[11].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[11], NULL);
 	} else {
-		encoder_ev[14].state_b = HAL_GPIO_ReadPin(ENC43_B_GPIO_Port,
+		encoder_ev[11].state_b = HAL_GPIO_ReadPin(ENC43_B_GPIO_Port,
 				ENC43_B_Pin);
 	}
-	if (encoder_ev[8].prev_state_a != encoder_ev[8].state_a) {
-		encoder_ev[8].prev_state_a = encoder_ev[8].state_a;
-		encoder_ev[8].state_a = HAL_GPIO_ReadPin(ENC31_A_GPIO_Port,
+	if (encoder_ev[2].prev_state_a != encoder_ev[2].state_a) {
+		encoder_ev[2].prev_state_a = encoder_ev[2].state_a;
+		encoder_ev[2].state_a = HAL_GPIO_ReadPin(ENC31_A_GPIO_Port,
 				ENC31_A_Pin);
-		encoder_ev[8].prev_state_b = encoder_ev[8].state_b;
-		encoder_ev[8].state_b = HAL_GPIO_ReadPin(ENC31_B_GPIO_Port,
+		encoder_ev[2].prev_state_b = encoder_ev[2].state_b;
+		encoder_ev[2].state_b = HAL_GPIO_ReadPin(ENC31_B_GPIO_Port,
 				ENC31_B_Pin);
-		encoder_ev[8].prev_ts = encoder_ev[8].ts;
-		encoder_ev[8].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[8], NULL);
+		encoder_ev[2].prev_ts = encoder_ev[2].ts;
+		encoder_ev[2].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[2], NULL);
 	} else {
-		encoder_ev[8].state_a = HAL_GPIO_ReadPin(ENC31_A_GPIO_Port,
+		encoder_ev[2].state_a = HAL_GPIO_ReadPin(ENC31_A_GPIO_Port,
 				ENC31_A_Pin);
 	}
 	if (encoder_ev[10].prev_state_a != encoder_ev[10].state_a) {
@@ -484,32 +484,32 @@ void EXTI15_10_IRQHandler(void)
 		encoder_ev[10].state_a = HAL_GPIO_ReadPin(ENC33_A_GPIO_Port,
 				ENC33_A_Pin);
 	}
-	if (encoder_ev[13].prev_state_a != encoder_ev[13].state_a) {
-		encoder_ev[13].prev_state_a = encoder_ev[13].state_a;
-		encoder_ev[13].state_a = HAL_GPIO_ReadPin(ENC42_A_GPIO_Port,
+	if (encoder_ev[7].prev_state_a != encoder_ev[7].state_a) {
+		encoder_ev[7].prev_state_a = encoder_ev[7].state_a;
+		encoder_ev[7].state_a = HAL_GPIO_ReadPin(ENC42_A_GPIO_Port,
 				ENC42_A_Pin);
-		encoder_ev[13].prev_state_b = encoder_ev[13].state_b;
-		encoder_ev[13].state_b = HAL_GPIO_ReadPin(ENC42_B_GPIO_Port,
+		encoder_ev[7].prev_state_b = encoder_ev[7].state_b;
+		encoder_ev[7].state_b = HAL_GPIO_ReadPin(ENC42_B_GPIO_Port,
 				ENC42_B_Pin);
-		encoder_ev[13].prev_ts = encoder_ev[13].ts;
-		encoder_ev[13].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[13], NULL);
+		encoder_ev[7].prev_ts = encoder_ev[7].ts;
+		encoder_ev[7].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[7], NULL);
 	} else {
-		encoder_ev[13].state_a = HAL_GPIO_ReadPin(ENC42_A_GPIO_Port,
+		encoder_ev[7].state_a = HAL_GPIO_ReadPin(ENC42_A_GPIO_Port,
 				ENC42_A_Pin);
 	}
-	if (encoder_ev[1].prev_state_a != encoder_ev[1].state_a) {
-		encoder_ev[1].prev_state_a = encoder_ev[1].state_a;
-		encoder_ev[1].state_a = HAL_GPIO_ReadPin(ENC12_A_GPIO_Port,
+	if (encoder_ev[4].prev_state_a != encoder_ev[4].state_a) {
+		encoder_ev[4].prev_state_a = encoder_ev[4].state_a;
+		encoder_ev[4].state_a = HAL_GPIO_ReadPin(ENC12_A_GPIO_Port,
 				ENC12_A_Pin);
-		encoder_ev[1].prev_state_b = encoder_ev[1].state_b;
-		encoder_ev[1].state_b = HAL_GPIO_ReadPin(ENC12_B_GPIO_Port,
+		encoder_ev[4].prev_state_b = encoder_ev[4].state_b;
+		encoder_ev[4].state_b = HAL_GPIO_ReadPin(ENC12_B_GPIO_Port,
 				ENC12_B_Pin);
-		encoder_ev[1].prev_ts = encoder_ev[1].ts;
-		encoder_ev[1].ts = HAL_GetTick();
-		xQueueSendFromISR(encoder_queue, &encoder_ev[1], NULL);
+		encoder_ev[4].prev_ts = encoder_ev[4].ts;
+		encoder_ev[4].ts = HAL_GetTick();
+		xQueueSendFromISR(encoder_queue, &encoder_ev[4], NULL);
 	} else {
-		encoder_ev[1].state_a = HAL_GPIO_ReadPin(ENC12_A_GPIO_Port,
+		encoder_ev[4].state_a = HAL_GPIO_ReadPin(ENC12_A_GPIO_Port,
 				ENC12_A_Pin);
 	}
   /* USER CODE END EXTI15_10_IRQn 1 */
@@ -543,26 +543,26 @@ void TIM6_DAC_IRQHandler(void)
 	/* Read current states of encoder pins */
 
     uint8_t current_state_a = HAL_GPIO_ReadPin(ENC24_A_GPIO_Port, ENC24_A_Pin);
-    if (encoder_ev[7].state_a != current_state_a) {
-        encoder_ev[7].prev_state_a = encoder_ev[7].state_a;
-        encoder_ev[7].prev_state_b = encoder_ev[7].state_b;
-        encoder_ev[7].state_a = current_state_a;
-        encoder_ev[7].state_b =  HAL_GPIO_ReadPin(ENC24_B_GPIO_Port, ENC24_B_Pin);;
-        encoder_ev[7].ts = HAL_GetTick();
+    if (encoder_ev[13].state_a != current_state_a) {
+        encoder_ev[13].prev_state_a = encoder_ev[13].state_a;
+        encoder_ev[13].prev_state_b = encoder_ev[13].state_b;
+        encoder_ev[13].state_a = current_state_a;
+        encoder_ev[13].state_b =  HAL_GPIO_ReadPin(ENC24_B_GPIO_Port, ENC24_B_Pin);;
+        encoder_ev[13].ts = HAL_GetTick();
         if(encoder_queue) {
-            xQueueSendFromISR(encoder_queue, &encoder_ev[7], NULL);
+            xQueueSendFromISR(encoder_queue, &encoder_ev[13], NULL);
         }
     }
 
     current_state_a = HAL_GPIO_ReadPin(ENC41_A_GPIO_Port, ENC41_A_Pin);
-    if (encoder_ev[12].state_a != current_state_a) {
-        encoder_ev[12].prev_state_a = encoder_ev[12].state_a;
-        encoder_ev[12].prev_state_b = encoder_ev[12].state_b;
-        encoder_ev[12].state_a = current_state_a;
-        encoder_ev[12].state_b =  HAL_GPIO_ReadPin(ENC41_B_GPIO_Port, ENC41_B_Pin);;
-        encoder_ev[12].ts = HAL_GetTick();
+    if (encoder_ev[3].state_a != current_state_a) {
+        encoder_ev[3].prev_state_a = encoder_ev[3].state_a;
+        encoder_ev[3].prev_state_b = encoder_ev[3].state_b;
+        encoder_ev[3].state_a = current_state_a;
+        encoder_ev[3].state_b =  HAL_GPIO_ReadPin(ENC41_B_GPIO_Port, ENC41_B_Pin);;
+        encoder_ev[3].ts = HAL_GetTick();
         if(encoder_queue) {
-            xQueueSendFromISR(encoder_queue, &encoder_ev[12], NULL);
+            xQueueSendFromISR(encoder_queue, &encoder_ev[3], NULL);
         }
     }
   /* USER CODE END TIM6_DAC_IRQn 1 */
