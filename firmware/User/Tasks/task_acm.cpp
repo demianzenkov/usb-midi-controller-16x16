@@ -28,7 +28,7 @@ void ACM::task(void const *arg) {
 //	size_t packet_cnt = 0;
 //	size_t img_size = 0;
 
-	char command_string_buffer[256] = {0};
+	char command_string_buffer[512] = {0};
 	size_t command_string_len = 0;
 	while (1) {
         if(xQueueReceive(p_this->acm_event_queue, &acm_ev, portMAX_DELAY) == pdTRUE)
@@ -113,7 +113,7 @@ void ACM::parseInputBuffer(char * buffer) {
 					return;
 				}
 				ui.showBarLevel(disp_id, level);
-				// encoder_values[disp_id] = value;
+				encoder_values[disp_id] = level;
 				CDC_Transmit(0, (uint8_t *)"OK\n\r", 4);
 				return;
 			}

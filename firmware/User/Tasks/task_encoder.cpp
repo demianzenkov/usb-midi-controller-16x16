@@ -58,7 +58,7 @@ void TaskEncoder_createTask() {
          if(xQueueReceive(encoder_queue, &ev, portMAX_DELAY) == pdTRUE) {
                  if(ev.prev_state_a == 0 && ev.state_a == 1) {
                      if(ev.prev_state_b == 0 && ev.state_b == 1) {
-                     	if((ev.encoder_id != 14) && (ev.encoder_id != 15)) {
+                     	if((ev.encoder_id != 15) && (ev.encoder_id != 11)) {
                             if(encoder_values[ev.encoder_id] > ENCODER_MIN_VALUE) {
                                 encoder_values[ev.encoder_id]--;
 							}
@@ -78,7 +78,7 @@ void TaskEncoder_createTask() {
                      }
                  } else if(ev.prev_state_a == 1 && ev.state_a == 0) {
                      if(ev.prev_state_b == 0 && ev.state_b == 1) {
-                         if((ev.encoder_id != 14) && (ev.encoder_id != 15)) {
+                         if((ev.encoder_id != 15) && (ev.encoder_id != 11)) {
 							if(encoder_values[ev.encoder_id] < ENCODER_MAX_VALUE) {
 								encoder_values[ev.encoder_id]++;
 							}
