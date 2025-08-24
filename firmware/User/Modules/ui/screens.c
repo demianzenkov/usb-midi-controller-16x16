@@ -97,9 +97,10 @@ void create_screen_main() {
             lv_obj_t *obj = lv_label_create(parent_obj);
             objects.label_level = obj;
             lv_obj_set_pos(obj, 0, 42);
-            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_obj_set_size(obj, LV_PCT(90), LV_SIZE_CONTENT);
             lv_label_set_text(obj, "Value");
             lv_obj_set_style_align(obj, LV_ALIGN_TOP_MID, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
         {
             // label_level_min
