@@ -30,6 +30,10 @@ Device supports a set of commands to setup interface fields through serial port.
 
 <img src="media/interface.jpg" style="float: left;" width="500"/>
 
+##### Demo
+
+https://github.com/user-attachments/assets/066187ef-49a9-449c-b158-acdf62c2ad6f
+
 ##### Board Bringup
 
 <img src="media/board_raw.jpg" width="380"/>    <img src="media/board_bringup.jpeg" width="320" />
