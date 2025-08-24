@@ -6,13 +6,13 @@ Firmware for composite USB device with MIDI & Serial interface running on STM32F
 
 On every encoder event device sends MIDI commands to the connected USB host. Easiest way to check MIDI commands is using MidiView app.
 
-<img src="media/midiview.png" style="zoom:30%; float: left;"/>
+<img src="media/midiview.png" style="float: left;" width="400"/>
 
 ##### Display Elements
 
 Each of 16 displays has channel, name, value and bar elements.
 
-<img src="media/display.png" style="zoom:20%; float: left;"/>
+<img src="media/display.png" style="float: left;" width="200"/>
 
 ##### Serial Interface
 
@@ -28,11 +28,11 @@ Device supports a set of commands to setup interface fields through serial port.
 
 ##### Interface example
 
-<img src="media/interface.jpg" style="zoom:10%; float: left;"/>
+<img src="media/interface.jpg" style="float: left;" width="500"/>
 
 ##### Board Bringup
 
-<img src="media/board_raw.jpg" style="zoom:7.5%;" />		<img src="media/board_bringup.jpeg" alt="board_bringup" style="zoom:7%;" />
+<img src="media/board_raw.jpg" width="380"/>    <img src="media/board_bringup.jpeg" width="320" />
 
 ##### TODO 
 
